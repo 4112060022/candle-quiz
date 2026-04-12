@@ -224,7 +224,9 @@ function render(rows) {
   const total = rows.length;
   const rc = {};
   rows.forEach(r => { if(r.result) rc[r.result]=(rc[r.result]||0)+1; });
-  const top = Object.entries(rc).sort((a,b)=>b[1]-a[1])[0];
+  const sorted = Object.entries(rc).sort((a,b)=>b[1]-a[1]);
+  const topCount = sorted.length > 0 ? sorted[0][1] : 0;
+  const tops = sorted.filter(([k,v]) => v === topCount);
   const last = rows.length > 0 ? rows[rows.length-1].time : '－';
   document.getElementById('last-update').textContent = '最後更新：' + new Date().toLocaleString('zh-TW');
 
@@ -237,8 +239,8 @@ function render(rows) {
       </div>
       <div class="stat-card">
         <div class="stat-label">最多人的結果</div>
-        <div class="stat-num" style="font-size:20px;padding-top:10px">${top?top[0]:'－'}</div>
-        <div class="stat-sub">${top?top[1]+' 人選擇':'尚無數據'}</div>
+        <div class="stat-num" style="font-size:${tops.length > 1 ? '15px' : '20px'};padding-top:10px;line-height:1.6">${tops.length > 0 ? tops.map(([k])=>k).join('<br>') : '－'}</div>
+        <div class="stat-sub">${tops.length > 1 ? '並列第一，各 '+topCount+' 人' : tops.length === 1 ? topCount+' 人選擇' : '尚無數據'}</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">最新填寫時間</div>
