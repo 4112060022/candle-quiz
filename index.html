@@ -318,16 +318,16 @@ const questions = [
 const results = {
   A:{name:"溫暖依附型",sub:"愛肉・黏人",scents:["香草","洋甘菊"],func:"分離焦慮舒緩",
      desc:"你和你的寵物都是愛黏人的溫暖小太陽，最需要的是彼此的陪伴與安心感。香草的甜暖與洋甘菊的柔和，能讓你們的空間充滿被擁抱的感覺。",
-     animal:"dog",cc:"#E8CFA8",fc:"#F5A623",ac:"#C4956A",bg:"rgba(196,149,106,0.07)"},
+     animal:"dog",emoji:"🐶",cc:"#E8CFA8",fc:"#F5A623",ac:"#C4956A",bg:"rgba(196,149,106,0.07)"},
   B:{name:"靜謐敏感型",sub:"愛魚・警覺",scents:["薰衣草","雪松"],func:"減少驚嚇",
      desc:"你和你的寵物都是細膩敏感的靈魂，對環境的變化特別有感。薰衣草的寧靜與雪松的沉穩，能替你們打造一個安全、不受干擾的小天地。",
-     animal:"cat",cc:"#C8D8E8",fc:"#9BB5C8",ac:"#6A9594",bg:"rgba(106,149,148,0.07)"},
+     animal:"cat",emoji:"🐱",cc:"#C8D8E8",fc:"#9BB5C8",ac:"#6A9594",bg:"rgba(106,149,148,0.07)"},
   C:{name:"活力探索型",sub:"愛甜・好動",scents:["甜橙","輕花香"],func:"情緒平衡",
      desc:"你和你的寵物都是停不下來的好奇寶寶，活力十足！甜橙的清新與輕盈花香，能在你們玩累之後帶來平靜，幫助情緒慢慢落地。",
-     animal:"hamster",cc:"#F5C872",fc:"#E8903A",ac:"#C4903A",bg:"rgba(196,144,58,0.07)"},
+     animal:"hamster",emoji:"🐹",cc:"#F5C872",fc:"#E8903A",ac:"#C4903A",bg:"rgba(196,144,58,0.07)"},
   D:{name:"自然療癒型",sub:"草本・獨立",scents:["洋甘菊","微草本"],func:"放鬆穩定",
      desc:"你和你的寵物都有著自在獨立的靈魂，喜歡按自己的節奏生活。洋甘菊與微草本的大地氣息，能讓你們的空間充滿回歸自然的平靜力量。",
-     animal:"bunny",cc:"#B8D4B0",fc:"#7AAA72",ac:"#7A9E7E",bg:"rgba(122,158,126,0.07)"}
+     animal:"bunny",emoji:"🐰",cc:"#B8D4B0",fc:"#7AAA72",ac:"#7A9E7E",bg:"rgba(122,158,126,0.07)"}
 };
 
 let current=0,answers=[];
@@ -391,9 +391,16 @@ function showResult(){
       <div class="result-header">
         <div class="result-eyebrow">YOUR SCENT TYPE</div>
         <div class="result-duo">
-          <svg width="88" height="88" style="animation:bounce 2.5s ease-in-out infinite"><use href="#${r.animal}"/></svg>
-          ${cSVG}
-          <svg width="88" height="88" style="animation:bounce 2.5s ease-in-out 0.7s infinite"><use href="#${r.animal}"/></svg>
+          <div style="width:80px;height:80px;border-radius:50%;background:${r.bg};border:2px solid ${r.ac};display:flex;align-items:center;justify-content:center;font-size:36px">${r.emoji}</div>
+          <svg viewBox="0 0 60 80" width="64" height="86" style="flex-shrink:0">
+            <ellipse cx="30" cy="76" rx="16" ry="4" fill="rgba(0,0,0,0.07)"/>
+            <rect x="10" y="36" width="40" height="40" rx="5" fill="${r.cc}" opacity="0.95"/>
+            <rect x="10" y="36" width="11" height="40" rx="3" fill="rgba(255,255,255,0.28)"/>
+            <line x1="30" y1="36" x2="30" y2="24" stroke="#6B4C2A" stroke-width="2.5" stroke-linecap="round"/>
+            <ellipse cx="30" cy="12" rx="10" ry="14" fill="${r.fc}" opacity="0.9"/>
+            <ellipse cx="30" cy="16" rx="5" ry="7" fill="rgba(255,240,180,0.7)"/>
+          </svg>
+          <div style="width:80px;height:80px;border-radius:50%;background:${r.bg};border:2px solid ${r.ac};display:flex;align-items:center;justify-content:center;font-size:36px">${r.emoji}</div>
         </div>
         <div class="result-name" style="color:${r.ac}">${r.name}</div>
         <div class="result-sub">${r.sub}</div>
@@ -412,10 +419,10 @@ function showResult(){
           <div class="info-card-val">${r.func}</div>
         </div>
       </div>
-      <div class="deco-row">
-        <svg width="26" height="26" style="color:${r.ac}"><use href="#paw" fill="${r.ac}"/></svg>
-        <svg width="22" height="20" style="color:${r.ac}"><use href="#heart" fill="${r.ac}"/></svg>
-        <svg width="26" height="26" style="color:${r.ac}"><use href="#paw" fill="${r.ac}"/></svg>
+      <div class="deco-row" style="color:${r.ac}">
+        <span style="font-size:20px;opacity:0.5">🐾</span>
+        <span style="font-size:18px;opacity:0.4">♥</span>
+        <span style="font-size:20px;opacity:0.5">🐾</span>
       </div>
       <div class="result-footer">
         <div class="share-row">
@@ -442,30 +449,78 @@ function showResult(){
 <div class="saving-toast" id="toast">正在產生圖片...</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
+async function captureResult() {
+  const el = document.getElementById('result-content');
+
+  // 停止所有動畫
+  const animated = el.querySelectorAll('[style*="animation"]');
+  animated.forEach(el => el.style.animation = 'none');
+
+  // 隱藏按鈕區域不截入
+  const footer = el.querySelector('.result-footer');
+  const deco = el.querySelector('.deco-row');
+  const logoWrap = el.querySelector('.logo-wrap-sm');
+  if (footer) footer.style.display = 'none';
+  if (deco) deco.style.display = 'none';
+  if (logoWrap) logoWrap.style.display = 'none';
+
+  await new Promise(r => setTimeout(r, 100));
+
+  const canvas = await html2canvas(el, {
+    backgroundColor: '#FAF6F0',
+    scale: 3,
+    useCORS: true,
+    allowTaint: true,
+    logging: false,
+    ignoreElements: (element) => {
+      return element.classList && (
+        element.classList.contains('result-footer') ||
+        element.classList.contains('deco-row') ||
+        element.classList.contains('logo-wrap-sm')
+      );
+    }
+  });
+
+  // 還原
+  if (footer) footer.style.display = '';
+  if (deco) deco.style.display = '';
+  if (logoWrap) logoWrap.style.display = '';
+  animated.forEach(el => el.style.animation = '');
+
+  return canvas;
+}
+
 async function saveImage() {
   const toast = document.getElementById('toast');
   toast.textContent = '正在產生圖片...';
   toast.style.opacity = '1';
 
   try {
-    const el = document.getElementById('result-content');
-    const canvas = await html2canvas(el, {
-      backgroundColor: '#FAF6F0',
-      scale: 2,
-      useCORS: true,
-      logging: false
-    });
+    const canvas = await captureResult();
 
-    const link = document.createElement('a');
-    link.download = 'memora-香氛性格測驗結果.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-
-    toast.textContent = '圖片已儲存！';
-    setTimeout(() => { toast.style.opacity = '0'; }, 2000);
+    // 手機用 blob URL，電腦用 download
+    const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+      canvas.toBlob(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'memora-香氛性格測驗結果.png';
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 3000);
+      }, 'image/png');
+      toast.textContent = '圖片已下載！請到檔案 App 查看';
+    } else {
+      const link = document.createElement('a');
+      link.download = 'memora-香氛性格測驗結果.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      toast.textContent = '圖片已儲存到下載資料夾！';
+    }
+    setTimeout(() => { toast.style.opacity = '0'; }, 3000);
   } catch(e) {
-    toast.textContent = '請截圖儲存結果';
-    setTimeout(() => { toast.style.opacity = '0'; }, 2000);
+    toast.textContent = '請直接截圖儲存結果';
+    setTimeout(() => { toast.style.opacity = '0'; }, 3000);
   }
 }
 
@@ -491,27 +546,30 @@ async function sendToSheet(result, answers) {
 async function shareResult() {
   if (navigator.share) {
     try {
-      const el = document.getElementById('result-content');
-      const canvas = await html2canvas(el, {
-        backgroundColor: '#FAF6F0',
-        scale: 2,
-        useCORS: true,
-        logging: false
-      });
+      const toast = document.getElementById('toast');
+      toast.textContent = '正在準備分享...';
+      toast.style.opacity = '1';
+
+      const canvas = await captureResult();
 
       canvas.toBlob(async (blob) => {
         const file = new File([blob], 'memora-結果.png', { type: 'image/png' });
-        await navigator.share({
-          title: 'memora 共香研究所 — 香氛性格測驗',
-          text: '我完成了 memora 的香氛性格測驗，來看看你和寵物適合什麼香味！',
-          files: [file]
-        });
+        try {
+          await navigator.share({
+            title: 'memora 共香研究所 — 香氛性格測驗',
+            text: '我完成了 memora 的香氛性格測驗，來看看你和寵物適合什麼香味！',
+            files: [file]
+          });
+          toast.style.opacity = '0';
+        } catch(e) {
+          await saveImage();
+        }
       }, 'image/png');
     } catch(e) {
-      saveImage();
+      await saveImage();
     }
   } else {
-    saveImage();
+    await saveImage();
   }
 }
 
